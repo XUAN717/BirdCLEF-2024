@@ -24,9 +24,24 @@
 
 ![secondary_labels](https://github.com/XUAN717/BirdCLEF-2024/assets/97745870/f4340389-3e9f-4b62-b766-5ed42ae1dd12)
 
-3. longitude & latitude
+3. type
+
+![type](https://github.com/XUAN717/BirdCLEF-2024/assets/97745870/23bbe6f9-7724-4a43-901c-259cb79d5b35)
+
+
+4. longitude & latitude
 
 ![longitude latitude](https://github.com/XUAN717/BirdCLEF-2024/assets/97745870/2dd89177-8b2c-49a5-b8a5-ab57a3970055)
 
+5. longitude & latitude & rating
+![latitude](https://github.com/XUAN717/BirdCLEF-2024/assets/97745870/67aaaf7c-009d-484c-8268-bca99a770fce)
+
+![longitude](https://github.com/XUAN717/BirdCLEF-2024/assets/97745870/26e785f7-292f-4bb9-a066-8b2c5f1b3971)
+
+![rating2](https://github.com/XUAN717/BirdCLEF-2024/assets/97745870/150b529c-00ef-4bbf-8425-b0963280af47)
+
+5. rating
+
+![rating1](https://github.com/XUAN717/BirdCLEF-2024/assets/97745870/5d87813b-83b3-4ade-a296-5dbcb112544b)
 
 
