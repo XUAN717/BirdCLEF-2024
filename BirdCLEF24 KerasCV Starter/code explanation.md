@@ -1,7 +1,7 @@
-# 设置环境和导入库
-
-#### You:
-解释代码：
+# BirdCLEF2024 KerasCV Starter
+## TRAIN
+ 
+```
 import os
 os.environ["KERAS_BACKEND"] = "jax"  # "jax" or "tensorflow" or "torch" 
 
@@ -25,8 +25,9 @@ import matplotlib.pyplot as plt
 import matplotlib as mpl
 
 cmap = mpl.cm.get_cmap('coolwarm')
+```
 
-#### ChatGPT:
+
 这段代码是一个Python脚本，其目的是导入一些库并设置一些环境变量以及加载一些预定义的配置。让我们逐行解释：
 
 1. `import os`: 导入Python的操作系统接口，用于与操作系统进行交互。
@@ -50,7 +51,7 @@ cmap = mpl.cm.get_cmap('coolwarm')
 这段代码的作用是设置环境，导入必要的库，并且定义了一个颜色映射，准备后续使用。
 
 
-#### You:
+```
 class CFG:
     seed = 42
     
@@ -83,8 +84,8 @@ class CFG:
     class_labels = list(range(num_classes))
     label2name = dict(zip(class_labels, class_names))
     name2label = {v:k for k,v in label2name.items()}
+```
 
-#### ChatGPT:
 这段代码定义了一个名为`CFG`的类，其中包含了一系列配置参数。让我们逐个解释：
 
 1. `seed = 42`: 设置随机种子，用于复现实验结果的一致性。
@@ -110,26 +111,27 @@ class CFG:
 这个类包含了训练和数据集的各种参数和配置信息，使得可以方便地对整个项目进行管理和调整。
 
 
-#### You:
+```
 tf.keras.utils.set_random_seed(CFG.seed)
+```
 
-#### ChatGPT:
+
 这行代码是在TensorFlow中设置随机种子的方式。通过`tf.keras.utils.set_random_seed()`函数，可以设置TensorFlow的随机种子，以确保在训练过程中的随机操作（比如权重初始化、数据增强等）都是可复现的，即在相同的种子下，每次运行都会得到相同的结果。
 
 在这个代码中，`CFG.seed`是之前定义的配置类`CFG`中的一个参数，用来指定随机种子的数值。通常情况下，设置了随机种子可以使得实验结果在不同运行之间保持一致，这对于调试和比较不同模型的性能非常有用。
 
 
-#### You:
+```
 BASE_PATH = '/kaggle/input/birdclef-2024'
+```
 
-#### ChatGPT:
 这行代码定义了一个名为`BASE_PATH`的全局变量，用于存储BirdCLEF-2024数据集的根目录路径。在这个路径下，预计包含了训练数据、测试数据以及其他与该数据集相关的文件和目录。
 
 通常情况下，将数据集的根目录路径存储在一个全局变量中是很有用的，因为这样可以方便地在整个代码库中引用该路径，而不必多次输入或者硬编码路径。这也使得代码更易于维护和修改，因为如果数据集的存储位置发生变化，只需要修改这个全局变量的值即可，而不必在代码的各个地方逐个修改路径。
 
 
-#### You:
 
+```
 df = pd.read_csv(f'{BASE_PATH}/train_metadata.csv')
 df['filepath'] = BASE_PATH + '/train_audio/' + df.filename
 df['target'] = df.primary_label.map(CFG.name2label)
@@ -138,8 +140,8 @@ df['xc_id'] = df.filepath.map(lambda x: x.split('/')[-1].split('.')[0])
 
 # Display rwos
 df.head(2)
+```
 
-#### ChatGPT:
 这段代码利用了之前定义的`BASE_PATH`全局变量以及一些预定义的配置参数来加载和处理BirdCLEF-2024数据集中的元数据文件。让我们逐行解释：
 
 1. `df = pd.read_csv(f'{BASE_PATH}/train_metadata.csv')`: 使用Pandas库的`read_csv()`函数从指定路径下的`train_metadata.csv`文件中读取数据，并将其存储在名为`df`的DataFrame中。
@@ -155,7 +157,7 @@ df.head(2)
 6. `df.head(2)`: 显示DataFrame的前两行数据，以便查看处理后的结果。这段代码的作用是将BirdCLEF-2024数据集中的元数据文件加载到一个Pandas DataFrame中，并对数据进行处理和组织，以便后续使用。
 
 
-#### You:
+```
 def load_audio(filepath):
     audio, sr = librosa.load(filepath)
     return audio, sr
@@ -209,8 +211,8 @@ def display_audio(row):
                  ax=ax[1])
     ax[0].set_xlabel('');
     fig.show()
+```
 
-#### ChatGPT:
 这些函数用于加载音频数据并生成其对应的频谱图，并提供一个函数来可视化音频和频谱图。让我们逐个解释：
 
 1. `load_audio(filepath)`: 这个函数接受一个文件路径作为输入，使用Librosa库加载音频文件，并返回音频数据和采样率。
@@ -220,25 +222,25 @@ def display_audio(row):
 3. `display_audio(row)`: 这个函数接受一个DataFrame的行作为输入，其中包含了音频文件的相关信息。它首先从行中获取文件路径，然后调用`load_audio()`函数加载音频文件。接着，它截取了指定长度的音频，然后调用`get_spectrogram()`函数生成音频的梅尔频谱图。最后，它使用IPython的`Audio`对象将音频播放器嵌入到Notebook中，并使用Matplotlib绘制音频的波形图和梅尔频谱图。
 
 
-#### You:
+```
 row = df.iloc[35]
 
 # Display audio
 display_audio(row)
+```
 
-#### ChatGPT:
 这段代码首先从DataFrame `df` 中提取第35行的数据，然后调用 `display_audio()` 函数来显示该行对应的音频文件的波形图和梅尔频谱图。让我们看看输出结果。
 
 
-#### You:
+```
 # Import required packages
 from sklearn.model_selection import train_test_split
 
 train_df, valid_df = train_test_split(df, test_size=0.2)
 
 print(f"Num Train: {len(train_df)} | Num Valid: {len(valid_df)}")
+```
 
-#### ChatGPT:
 这段代码使用了`train_test_split`函数从原始的DataFrame `df` 中划分了训练集和验证集，并打印了划分后的训练集和验证集的大小。让我们来解释一下：
 
 1. `from sklearn.model_selection import train_test_split`: 导入了`train_test_split`函数，这个函数用于将数据集划分为训练集和验证集。
@@ -248,7 +250,7 @@ print(f"Num Train: {len(train_df)} | Num Valid: {len(valid_df)}")
 3. `print(f"Num Train: {len(train_df)} | Num Valid: {len(valid_df)}")`: 打印了训练集和验证集的大小，以便查看划分的结果。
 
 
-#### You:
+```
 # Decodes Audio
 def build_decoder(with_labels=True, dim=1024):
     def get_audio(filepath):
@@ -320,8 +322,8 @@ def build_decoder(with_labels=True, dim=1024):
         return decode(path), label
 
     return decode_with_labels if with_labels else decode
+```
 
-#### ChatGPT:
 这个代码定义了一个音频解码器函数 `build_decoder`，它将音频文件解码为频谱图。让我们逐步解释每个部分：
 
 1. `get_audio(filepath)`: 这个内部函数用于加载并解码音频文件。它首先使用TensorFlow IO的 `decode_vorbis` 函数解码 `.ogg` 格式的音频文件，然后将音频转换为浮点型张量。如果音频是立体声的，则仅保留其中的一个声道。最后，返回单声道的音频张量。
@@ -339,7 +341,7 @@ def build_decoder(with_labels=True, dim=1024):
 最终，`build_decoder` 函数根据是否包含标签信息返回 `decode_with_labels` 函数或者 `decode` 函数。
 
 
-#### You:
+```
 def build_augmenter():
     augmenters = [
         keras_cv.layers.MixUp(alpha=0.4),
@@ -357,8 +359,8 @@ def build_augmenter():
         return data["images"], data["labels"]
     
     return augment
+```
 
-#### ChatGPT:
 这个函数 `build_augmenter` 用于构建数据增强器，以在训练期间对输入数据进行随机增强。让我们来看一下它的实现细节：
 
 1. `augmenters`: 这是一个列表，包含了不同的数据增强器。在这个例子中，使用了三种数据增强技术：MixUp、随机时间掩码和随机频率掩码。
@@ -370,7 +372,7 @@ def build_augmenter():
 这种设计允许用户在训练模型时轻松地应用数据增强技术，以提高模型的泛化能力和鲁棒性。
 
 
-#### You:
+```
 def build_dataset(paths, labels=None, batch_size=32, 
                   decode_fn=None, augment_fn=None, cache=True,
                   augment=False, shuffle=2048):
@@ -395,8 +397,8 @@ def build_dataset(paths, labels=None, batch_size=32,
     ds = ds.map(augment_fn, num_parallel_calls=AUTO) if augment else ds
     ds = ds.prefetch(AUTO)
     return ds
+```
 
-#### ChatGPT:
 这个函数用于构建输入数据集的 TensorFlow Dataset 对象，并可选择性地对数据进行解码、缓存、增强和洗牌。让我们逐步解释每个部分：
 
 1. 如果 `decode_fn` 为 `None`，则使用 `build_decoder` 函数构建一个解码器函数，并根据是否包含标签信息确定是否需要固定音频长度。
@@ -420,7 +422,7 @@ def build_dataset(paths, labels=None, batch_size=32,
 这个函数的设计使得用户能够方便地构建输入数据集，并对数据进行解码、缓存、增强和洗牌等预处理操作，以准备好用于模型的训练或评估。
 
 
-#### You:
+```
 # Train
 train_paths = train_df.filepath.values
 train_labels = train_df.target.values
@@ -432,8 +434,8 @@ valid_paths = valid_df.filepath.values
 valid_labels = valid_df.target.values
 valid_ds = build_dataset(valid_paths, valid_labels, batch_size=CFG.batch_size,
                          shuffle=False, augment=False)
+```
 
-#### ChatGPT:
 这段代码用于构建训练集和验证集的 TensorFlow Dataset 对象，并准备用于训练模型。让我们来看一下具体做了什么：
 
 1. 对于训练集，从 `train_df` 中获取文件路径和标签，并分别存储在 `train_paths` 和 `train_labels` 变量中。
@@ -447,7 +449,7 @@ valid_ds = build_dataset(valid_paths, valid_labels, batch_size=CFG.batch_size,
 这样，训练集和验证集的 Dataset 对象就准备好了，可以用于训练和评估模型。
 
 
-#### You:
+```
 def plot_batch(batch, row=3, col=3, label2name=None,):
     """Plot one batch data"""
     if isinstance(batch, tuple) or isinstance(batch, list):
@@ -471,8 +473,8 @@ def plot_batch(batch, row=3, col=3, label2name=None,):
             plt.title(name)
     plt.tight_layout()
     plt.show()
+```
 
-#### ChatGPT:
 这个函数用于绘制一个批次（batch）的数据，其中包含了音频的频谱图和对应的标签。让我们来逐步解释：
 
 1. `if isinstance(batch, tuple) or isinstance(batch, list):`：首先检查输入的 `batch` 是否是元组或列表类型。如果是，则假设第一个元素是频谱图，第二个元素是标签；否则，假设 `batch` 中只包含了频谱图。
@@ -496,16 +498,16 @@ def plot_batch(batch, row=3, col=3, label2name=None,):
 这个函数适用于批量展示频谱图数据，以便查看数据的特征和分布情况。
 
 
-#### You:
+```
 sample_ds = train_ds.take(100)
 batch = next(iter(sample_ds))
 plot_batch(batch, label2name=CFG.label2name)
+```
 
-#### ChatGPT:
 这段代码从训练集中取出了100个样本，并将其组成一个数据集 `sample_ds`。然后，使用 `next(iter(sample_ds))` 获取了数据集中的下一个批次，并将其作为参数传递给 `plot_batch` 函数进行绘制。同时，还传入了标签名称映射字典 `CFG.label2name`，以便在图中显示类别名称。让我们来看看绘制的结果。
 
 
-#### You:
+```
 # Create an input layer for the model
 inp = keras.layers.Input(shape=(None, None, 3))
 # Pretrained backbone
@@ -525,8 +527,8 @@ model.compile(optimizer="adam",
               metrics=[keras.metrics.AUC(name='auc')],
              )
 model.summary()
+```
 
-#### ChatGPT:
 这段代码创建了一个卷积神经网络模型，其中包含了一个预训练的EfficientNetV2模型作为主干网络，并添加了一个分类器头部用于预测目标类别。让我们逐步解释：
 
 1. `inp = keras.layers.Input(shape=(None, None, 3))`：创建一个输入层，指定输入数据的形状为 `(None, None, 3)`，其中 `(None, None)` 表示输入的图像可以具有任意尺寸，`3` 表示图像的通道数为 3，即 RGB 彩色图像。
@@ -544,7 +546,7 @@ model.summary()
 这个模型包含了一个预训练的EfficientNetV2主干网络和一个分类器头部，用于对图像进行分类任务。
 
 
-#### You:
+```
 import math
 
 def get_lr_callback(batch_size=8, mode='cos', epochs=10, plot=False):
@@ -570,8 +572,8 @@ def get_lr_callback(batch_size=8, mode='cos', epochs=10, plot=False):
         plt.show()
 
     return keras.callbacks.LearningRateScheduler(lrfn, verbose=False)  # Create lr callback
+```
 
-#### ChatGPT:
 这个函数用于创建一个学习率调度器的回调函数，用于动态调整模型的学习率。让我们逐步解释每个部分：
 
 1. `lr_start, lr_max, lr_min = 5e-5, 8e-6 * batch_size, 1e-5`：定义了学习率的起始值、最大值和最小值。这些值可根据需要进行调整。
@@ -589,21 +591,21 @@ def get_lr_callback(batch_size=8, mode='cos', epochs=10, plot=False):
 这个函数提供了灵活的学习率调度策略，并可以通过参数进行自定义。
 
 
-#### You:
+```
 lr_cb = get_lr_callback(CFG.batch_size, plot=True)
+```
 
-#### ChatGPT:
 通过调用 `get_lr_callback` 函数，并传入批量大小 `CFG.batch_size` 以及 `plot=True` 参数，生成了一个学习率调度器的回调函数 `lr_cb`。接下来，将会显示学习率曲线图，以便查看学习率随训练周期的变化情况。让我们等一下，看看曲线图的绘制结果。
 
 
-#### You:
+```
 ckpt_cb = keras.callbacks.ModelCheckpoint("best_model.weights.h5",
                                          monitor='val_auc',
                                          save_best_only=True,
                                          save_weights_only=True,
                                          mode='max')
+```
 
-#### ChatGPT:
 这段代码创建了一个模型检查点的回调函数 `ckpt_cb`，用于在训练过程中监测验证集上的 AUC 指标，并在指标达到最佳值时保存模型的权重。让我们来解释一下每个参数的含义：
 
 - `"best_model.weights.h5"`：指定保存的模型权重文件的名称。
@@ -619,7 +621,7 @@ ckpt_cb = keras.callbacks.ModelCheckpoint("best_model.weights.h5",
 这个模型检查点的回调函数可以确保在训练过程中保存了验证集上性能最佳的模型权重，以便后续进行模型评估或部署。
 
 
-#### You:
+```
 history = model.fit(
     train_ds, 
     validation_data=valid_ds, 
@@ -627,8 +629,8 @@ history = model.fit(
     callbacks=[lr_cb, ckpt_cb], 
     verbose=1
 )
+```
 
-#### ChatGPT:
 这段代码使用 `model.fit()` 函数训练模型，并将训练过程中的指标历史保存在 `history` 变量中。让我们来逐步解释每个参数的含义：
 
 - `train_ds`：训练集的 TensorFlow Dataset 对象，用于训练模型。
@@ -644,13 +646,13 @@ history = model.fit(
 训练过程中的指标历史将保存在 `history` 变量中，可以用于后续的可视化和分析。
 
 
-#### You:
+```
 best_epoch = np.argmax(history.history["val_auc"])
 best_score = history.history["val_auc"][best_epoch]
 print('>>> Best AUC: ', best_score)
 print('>>> Best Epoch: ', best_epoch+1)
+```
 
-#### ChatGPT:
 这段代码计算了验证集上AUC指标的最佳值以及对应的最佳周期。让我们来解释一下每一步：
 
 - `best_epoch = np.argmax(history.history["val_auc"])`：找到验证集上AUC指标历史中的最大值所对应的周期索引。
@@ -663,9 +665,9 @@ print('>>> Best Epoch: ', best_epoch+1)
 
 这个过程允许你从训练历史中找到模型在验证集上性能最佳的时刻。
 
+## INFER
 
-#### You:
-以下是另一个notebook：
+```
 import os
 os.environ["KERAS_BACKEND"] = "tensorflow"  # "jax" or "tensorflow" or "torch" 
 
@@ -689,12 +691,10 @@ import matplotlib.pyplot as plt
 import matplotlib as mpl
 
 cmap = mpl.cm.get_cmap('coolwarm')
-
-#### ChatGPT:
+```
 这个 notebook 的内容和之前的类似，不过是使用了 TensorFlow 作为后端。它导入了相同的库，并且设置了相同的色彩映射（coolwarm）。这可能是一个对比实验，用来比较在不同后端下模型的性能或者其他特性。
 
-
-#### You:
+```
 class CFG:
     seed = 42
     
@@ -722,8 +722,8 @@ class CFG:
     class_labels = list(range(num_classes))
     label2name = dict(zip(class_labels, class_names))
     name2label = {v:k for k,v in label2name.items()}
+```
 
-#### ChatGPT:
 这个类 `CFG` 包含了一些配置参数，用于指定模型训练和数据处理的一些设置。让我们来看一下其中的一些重要参数：
 
 - `seed = 42`：随机种子，用于控制随机数生成的一致性。
@@ -761,21 +761,25 @@ class CFG:
 这些参数可以根据具体的任务和数据集进行调整，以满足训练和数据处理的需求。
 
 
-#### You:
+
+
+```
 tf.keras.utils.set_random_seed(CFG.seed)
 
-#### ChatGPT:
+```
+
 这行代码将 TensorFlow 中的随机数种子设置为 `CFG.seed`，这样可以确保在相同的随机种子下，多次运行代码时产生的随机结果是一致的。这在训练神经网络时尤其重要，因为训练过程中经常使用随机初始化权重、随机打乱数据集等操作，设置随机种子可以使得实验结果更具可重现性。
 
 
-#### You:
+```
 BASE_PATH = '/kaggle/input/birdclef-2024'
 
-#### ChatGPT:
+```
+
 这行代码定义了一个名为 `BASE_PATH` 的变量，其值为 '/kaggle/input/birdclef-2024'。这个变量用于存储数据集的根目录路径，方便在后续代码中引用数据集的文件和文件夹。通过定义这样一个变量，可以提高代码的可读性和可维护性，同时也方便了在不同部分使用相同路径的需要。
 
 
-#### You:
+```
 test_paths = glob(f'{BASE_PATH}/test_soundscapes/*ogg')
 # During commit use `unlabeled` data as there is no `test` data.
 # During submission `test` data will automatically be populated.
@@ -783,8 +787,8 @@ if len(test_paths)==0:
     test_paths = glob(f'{BASE_PATH}/unlabeled_soundscapes/*ogg')[:10]
 test_df = pd.DataFrame(test_paths, columns=['filepath'])
 test_df.head()
+```
 
-#### ChatGPT:
 这段代码做了以下几件事情：
 
 1. 使用 `glob` 函数获取所有测试音频文件的路径，这些文件位于 `'/kaggle/input/birdclef-2024/test_soundscapes/'` 目录下。这里使用了通配符 `*ogg`，表示匹配所有扩展名为 ogg 的文件。
@@ -796,7 +800,7 @@ test_df.head()
 这段代码的目的是准备测试数据，以便后续对模型进行评估或预测。
 
 
-#### You:
+```
 # Create an input layer for the model
 inp = keras.layers.Input(shape=(None, None, 3))
 # Pretrained backbone
@@ -812,8 +816,8 @@ out = keras_cv.models.ImageClassifier(
 model = keras.models.Model(inputs=inp, outputs=out)
 # Load weights of trained model
 model.load_weights("/kaggle/input/birdclef24-kerascv-starter-train/best_model.weights.h5")
+```
 
-#### ChatGPT:
 这段代码创建了一个与之前类似的模型，不同之处在于它加载了预训练模型的权重。让我们逐步解释：
 
 1. `inp = keras.layers.Input(shape=(None, None, 3))`：创建一个输入层，形状为 `(None, None, 3)`，用于接受输入图像数据。
@@ -829,7 +833,8 @@ model.load_weights("/kaggle/input/birdclef24-kerascv-starter-train/best_model.we
 这段代码创建了一个模型并加载了预训练模型的权重，使得可以直接使用该模型进行推理或者进行进一步的微调。
 
 
-#### You:
+
+```
 # Decodes Audio
 def build_decoder(with_labels=True, dim=1024):
     def get_audio(filepath):
@@ -878,8 +883,8 @@ def build_decoder(with_labels=True, dim=1024):
         return spec
     
     return decode
+```
 
-#### ChatGPT:
 这段代码定义了一个名为 `build_decoder` 的函数，用于构建音频数据的解码器。解码器的主要作用是将音频文件解码成适合模型输入的格式，通常是将音频转换成梅尔频谱图或其他表示形式。让我们逐步解释这个函数的实现：
 
 1. `get_audio(filepath)` 函数：从文件路径读取音频文件并解码为音频数据。它使用 TensorFlow IO 库中的 `decode_vorbis` 函数解码 ogg 格式的音频文件，并将其转换为浮点张量。
@@ -893,7 +898,8 @@ def build_decoder(with_labels=True, dim=1024):
 通过这个解码器函数，可以将音频数据准备成适合模型输入的形式，从而进行训练或推理。
 
 
-#### You:
+
+```
 # Build data loader
 def build_dataset(paths, batch_size=1, decode_fn=None, cache=False):
     if decode_fn is None:
@@ -906,8 +912,8 @@ def build_dataset(paths, batch_size=1, decode_fn=None, cache=False):
     ds = ds.batch(batch_size, drop_remainder=False) # create batches
     ds = ds.prefetch(AUTO)
     return ds
+```
 
-#### ChatGPT:
 这段代码定义了一个名为 `build_dataset` 的函数，用于构建数据集加载器。它的作用是将音频文件的路径转换成模型可以直接使用的数据集，并进行相应的预处理。让我们逐步解释这个函数的实现：
 
 1. `decode_fn` 参数：用于指定解码器函数，将音频文件路径解码为模型输入所需的数据格式。如果没有指定解码器函数，则默认使用 `build_decoder` 函数构建一个解码器。
@@ -929,7 +935,9 @@ def build_dataset(paths, batch_size=1, decode_fn=None, cache=False):
 通过这个函数，可以方便地将音频文件路径转换成模型可以直接使用的数据集，并且可以根据需要进行相应的预处理和缓存操作。
 
 
-#### You:
+
+
+```
 # Initialize empty list to store ids
 ids = []
 
@@ -958,8 +966,8 @@ for idx, specs in enumerate(tqdm(iter(test_ds), desc='test ', total=len(test_df)
     ids += frame_ids
     # Concatenate the predictions
     preds = np.concatenate([preds, frame_preds], axis=0)
+```
 
-#### ChatGPT:
 这段代码用于进行测试数据集的推理，并将推理结果存储在一个列表中。让我们逐步解释它的实现：
 
 1. `ids = []`：初始化一个空列表，用于存储每个帧的ID。
@@ -981,14 +989,16 @@ for idx, specs in enumerate(tqdm(iter(test_ds), desc='test ', total=len(test_df)
 这段代码的目的是对测试数据集中的每个音频文件进行推理，并将每个帧的预测结果以及对应的 ID 存储在 `preds` 数组和 `ids` 列表中，以便后续的处理和分析。
 
 
-#### You:
+
+
+```
 # Submit prediction
 pred_df = pd.DataFrame(ids, columns=['row_id'])
 pred_df.loc[:, CFG.class_names] = preds
 pred_df.to_csv('submission.csv',index=False)
 pred_df.head()
+```
 
-#### ChatGPT:
 这段代码用于生成提交文件。让我们逐步解释它的实现：
 
 1. 创建一个 DataFrame `pred_df`，其中包含了每个预测的帧的ID（`row_id` 列）以及对应的预测结果。
