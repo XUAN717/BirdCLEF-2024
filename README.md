@@ -13,7 +13,7 @@
 * Kaggle运行BirdCLEF24: KerasCV Starter
 
 * 5.16更新🀄  
-  合并pre分支，把参考文献文件夹合并过来了，感觉可以删掉pre，不用分支
+  合并pre分支，把参考文献文件夹合并过来了，感觉可以删掉pre，不用分支  
   添加了BirdCLEF24 KerasCV Starter的代码解释文件，作为研究参考
 
 
@@ -40,6 +40,25 @@ https://www.webfx.com/tools/emoji-cheat-sheet/
 PANNs Large-Scale Pretrained Audio Neural Networks for Audio Pattern Recognition
 
 ## 1 BirdCLEF24: KerasCV Starter
+### 1.1 研究代码
+code explanation.md  
+得分0.60，暂以此作为baseline
 
+## 项目开发流程
+```mermaid
+gantt
+    title 项目开发流程
+    todayMarker off
+    section 探究
+      创建环境           :done, 2024-04-22, 4d
+      初步探究     :done, 2024-04-26, 7d
+   
+    section 实施
+      初次提交      :done, 2024-04-28  , 16d
+      优化算法      :2024-05-14  , 18d
+      测试提交      :2024-04-28  , 43d
 
+    section 验收
+      验收答辩    :2024-06-10, 10d
+```
 
