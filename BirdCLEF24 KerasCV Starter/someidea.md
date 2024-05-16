@@ -38,6 +38,8 @@ CQT是一种时频分析方法，它提供了比梅尔频谱图更高的频率�
 在频域中应用特定的滤波器来增强或抑制某些频率带，这可以帮助突出鸟类叫声的特征。
 
 此外，音频处理方法也可以结合使用，以利用它们各自的优势。例如，可以先使用CQT或STFT提取时频特征，然后使用MFCCs或其他倒谱系数来进一步提取对人类听觉系统更有意义的特征。这样的组合方法可能会提高识别性能。
+
+
 问题1.4
 2023第一名是这样说的
 I was pretty picky about augmentation selection, so my final models used next ones:
