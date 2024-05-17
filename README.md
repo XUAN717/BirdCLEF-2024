@@ -14,7 +14,8 @@
 
 * 5.16更新🀄  
   合并pre分支，把参考文献文件夹合并过来了，感觉可以删掉pre，不用分支  
-  添加了BirdCLEF24 KerasCV Starter的代码解释文件，作为研究参考
+  添加了BirdCLEF24 KerasCV Starter的代码解释文件，作为研究参考  
+  添加someidea
 
 
 ## 0 一些资料
@@ -43,6 +44,9 @@ PANNs Large-Scale Pretrained Audio Neural Networks for Audio Pattern Recognition
 ### 1.1 研究代码
 code explanation.md  
 得分0.60，暂以此作为baseline
+
+### 1.2 算法改进
+someidea.md
 
 ## 项目开发流程
 ```mermaid
