@@ -16,7 +16,7 @@
   添加了BirdCLEF24 KerasCV Starter的代码解释文件，作为研究参考  
   添加someidea.md，改进想法
 
-* 5.19更新更新🀄
+* 5.19更新更新🀄  
   添加compare.md，2023年和已上传的对比
 
 ## 0 一些资料
