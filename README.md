@@ -46,7 +46,7 @@ code explanation.md
 得分0.60，暂以此作为baseline
 
 ### 1.2 算法改进
-someidea.md
+someidea.md  
 compare.md
 
 ## 项目开发流程
