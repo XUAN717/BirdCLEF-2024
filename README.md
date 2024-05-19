@@ -47,6 +47,7 @@ code explanation.md
 
 ### 1.2 算法改进
 someidea.md
+compare.md
 
 ## 项目开发流程
 ```mermaid
