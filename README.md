@@ -12,11 +12,12 @@
 
 * Kaggle运行BirdCLEF24: KerasCV Starter
 
-* 5.16更新🀄  
-  合并pre分支，把参考文献文件夹合并过来了，感觉可以删掉pre，不用分支  
+* 合并pre分支，把参考文献文件夹合并过来了，感觉可以删掉pre，不用分支  
   添加了BirdCLEF24 KerasCV Starter的代码解释文件，作为研究参考  
-  添加someidea
+  添加someidea.md，改进想法
 
+* 5.19更新更新🀄
+  添加compare.md，2023年和已上传的对比
 
 ## 0 一些资料
 ### 0.1  GitHub Desktop
