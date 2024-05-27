@@ -20,8 +20,9 @@
   添加compare.md，2023年和已上传的对比
 
 * 5.26        
-  通过添加Dropout层,解决原模型存在的过拟合问题,详细更新在someidea
-  将mixup函数部分改为以0.5的概率进行          
+  通过添加Dropout层,解决原模型存在的过拟合问题,详细更新在someidea.md          
+  将mixup函数部分从全部进行改为以0.5的概率进行                      
+
 
 ## 0 一些资料
 ### 0.1  GitHub Desktop
