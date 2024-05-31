@@ -360,3 +360,282 @@ plt.show()
 8.df_pre.head(2).style.set_caption("Pre-Training Data").set_table_styles([...]): 这行代码展示了预处理后的预训练数据集的前两行样本，并设置了标题和表格样式。
 
 综上所述，这段代码的作用是从预训练数据集中移除了与 BirdCLEF-2024 数据集中重复的样本以及损坏的 MP3 文件，并选择了一些特定的列进行展示。最后，打印了预处理后的数据集样本数量，并展示了前两行样本。
+
+####################################################################################### 
+BIRDCLEF = '24'
+print(f"# BirdCLEF - 20{BIRDCLEF}")
+tmp = df24.query("birdclef==@BIRDCLEF").sample(1)
+#tmp.loc[:, 'filepath'] = tmp.filepath.str.replace(GCSPATH3, BASE_PATH3)
+row = tmp.squeeze()
+Display audio
+display_audio(row)
+
+这段代码涉及了一些操作，让我来逐步解释：
+
+1.BIRDCLEF = '24': 这行代码将字符串 '24' 赋值给变量 BIRDCLEF。
+2.print(f"# BirdCLEF - 20{BIRDCLEF}"): 这行代码打印了一个字符串，格式化了变量 BIRDCLEF 的值，生成了一个类似 # BirdCLEF - 2024 的输出。
+3.tmp = df_24.query("birdclef==@BIRDCLEF").sample(1): 这行代码从 DataFrame df_24 中选取了符合条件 "birdclef==@BIRDCLEF" 的行，然后随机抽取了其中的一个样本，并将其存储在变量 tmp 中。
+4.tmp.loc[:, 'filepath'] = tmp.filepath.str.replace(GCS_PATH3, BASE_PATH3): 这行代码对 tmp 中的 filepath 列进行了字符串替换操作，将列中的 GCS_PATH3 替换为 BASE_PATH3。这个操作似乎用于修改文件路径。我们并没有GCS_PATH3，注释掉，其中GCS_PATH是之前设备管理是作用的路径。
+5.row = tmp.squeeze(): 这行代码将 DataFrame tmp 中的单行数据转换为 Series，并将其存储在变量 row 中。
+6.display_audio(row): 这行代码调用了一个函数 display_audio()，并将 row 作为参数传递给该函数。根据函数名，它可能用于显示音频数据。
+
+综上所述，这段代码的作用是打印出 BirdCLEF 的年份信息，然后从 DataFrame df_23 中选择符合条件的样本，进行路径替换操作，并最终显示音频数据。
+之后按照不同的路径对其他年份的代码也进行分别的书写，不在一一列举。
+
+###############分层交叉验证###############################         
+    
+from sklearn.model_selection import StratifiedKFold                                                                       
+       
+skf1 = StratifiedKFold(n_splits=25, shuffle=True, random_state=CFG.seed)                                                       
+skf2 = StratifiedKFold(n_splits=CFG.num_fold, shuffle=True, random_state=CFG.seed)                                                       
+
+df_pre = df_pre.reset_index(drop=True)                                                                                     
+df_24 = df_24.reset_index(drop=True)                                                                                                              
+
+df_pre["fold"] = -1                                                                                                    
+df_24["fold"] = -1                                                                                                                                
+
+
+for fold, (train_idx, val_idx) in enumerate(skf1.split(df_pre, df_pre['primary_label'])):                           
+    df_pre.loc[val_idx, 'fold'] = fold                                                                                
+    
+
+for fold, (train_idx, val_idx) in enumerate(skf2.split(df_24, df_24['primary_label'])):                                                         
+    df_24.loc[val_idx, 'fold'] = fold                                                                                 
+这段代码主要用于创建交叉验证（Cross Validation）的折（fold）。让我来逐步解释：                                                                       
+                               
+1.from sklearn.model_selection import StratifiedKFold: 导入了用于分层交叉验证的 StratifiedKFold 类。                                         
+2.skf1 = StratifiedKFold(n_splits=25, shuffle=True, random_state=CFG.seed): 创建了一个 StratifiedKFold 对象 skf1，将数据分为 25 个折，设置了 shuffle=True 参数以随机打乱数据，random_state=CFG.seed 设置了随机种子。                                                          
+3.skf2 = StratifiedKFold(n_splits=CFG.num_fold, shuffle=True, random_state=CFG.seed): 创建了另一个 StratifiedKFold 对象 skf2，将数据分为 CFG.num_fold 个折，同样设置了 shuffle=True 参数和 random_state=CFG.seed 设置了随机种子。                                                                        
+4.df_pre = df_pre.reset_index(drop=True): 重置了 DataFrame df_pre 的索引，确保索引连续并从 0 开始。                                        
+5.df_24 = df_24.reset_index(drop=True): 重置了 DataFrame df_24 的索引，同样确保索引连续并从 0 开始。                                            
+6.为 DataFrame 添加了一个名为 'fold' 的新列，并将其初始化为 -1。                                                 
+7.对于 BirdCLEF 数据集中的折分配（21、22 和 23），通过循环遍历 StratifiedKFold 对象 skf1 生成的分割器。每次迭代，使用 split() 方法获取训练集和验证集的索引，然后将验证集对应行的 'fold' 列更新为当前折数 fold。                                                              
+8.对于 IBirdCLEF 数据集中的折分配（24），通过循环遍历 StratifiedKFold 对象 skf2 生成的分割器，操作与步骤 7 类似。                                      
+
+这段代码的目的是将数据集中的每个样本分配到指定的交叉验证折中，并在 DataFrame 中添加一个 'fold' 列来表示每个样本所在的折。                                     
+
+其中分类交叉验证的作用是什么：                                                                        
+分层交叉验证的主要作用是确保在划分训练集和验证集时，每个类别在不同折中的分布相对均匀。这种类型的交叉验证适用于分类问题，特别是当样本分布不平衡或者存在多个类别时。                                                                           
+以下是分层交叉验证的几个重要作用：                                         
+1.保持类别分布的一致性： 在分层交叉验证中，每个折中的类别比例与整体数据集中的类别比例相似。这有助于确保在训练和验证过程中，每个类别都能够得到充分的代表性，避免某些类别在某些折中缺乏代表性的情况。                                                           
+2.减少抽样偏差： 如果使用随机抽样进行交叉验证，存在可能在某些折中某些类别的样本数量过少或者过多的情况。分层交叉验证通过确保每个折中类别的均衡分布，减少了抽样偏差的影响，提高了模型评估的可靠性。                                                               
+3.更好地评估模型的泛化性能： 由于分层交叉验证能够保持类别分布的一致性，因此在不同折中评估模型性能时，模型更有可能能够泛化到未见过的类别。这样可以更准确地评估模型的泛化性能，预测其在真实世界中的表现。                                                                
+
+综上所述，分层交叉验证是一种有效的模型评估技术，特别适用于处理分类问题并且希望保持类别分布均衡的情况。                                  
+#############################过滤以及上下采样#################################          
+在之前给的基础版文件中已经有了过滤和上采样，因此在这里我们今天仅添加下采样。                def downsample_data(df, thr=500):                    
+    # get the class distribution                                        
+    class_dist = df['primary_label'].value_counts()                                  
+    
+    # identify the classes that have less than the threshold number of samples           
+    up_classes = class_dist[class_dist > thr].index.tolist()                             
+
+    # create an empty list to store the upsampled dataframes                           
+    down_dfs = []                                                                 
+                                               
+    # loop through the undersampled classes and upsample them                       
+    for c in up_classes:                                          
+        # get the dataframe for the current class                            
+        class_df = df.query("primary_label==@c")                                 
+        # Remove that class data                                               
+        df = df.query("primary_label!=@c")                                     
+        # upsample the dataframe                                        
+        class_df = class_df.sample(n=thr, replace=False, random_state=CFG.seed)          
+        # append the upsampled dataframe to the list                                   
+        down_dfs.append(class_df)                                      
+
+    # concatenate the upsampled dataframes and the original dataframe              
+    down_df = pd.concat([df] + down_dfs, axis=0, ignore_index=True)                  
+    
+    return down_df                                      
+    这个函数是用于对数据进行下采样的操作。让我来解释其中的步骤：             
+
+1.class_dist = df['primary_label'].value_counts(): 这行代码计算了每个类别的样本数量分布，其中 'primary_label' 是类别标签的列。                                
+2.up_classes = class_dist[class_dist &gt; thr].index.tolist(): 这行代码选择了样本数量超过阈值 thr 的类别，即需要进行下采样的类别列表。                                  
+3.down_dfs = []: 创建了一个空列表，用于存储下采样后的类别数据。                        
+4.下面的循环用于处理每个需要进行下采样的类别：                                     
+
+
+5.class_df = df.query("primary_label==@c"): 获取当前类别 c 的数据子集。               
+6.df = df.query("primary_label!=@c"): 从原始数据中移除当前类别 c 的数据。               
+7.class_df = class_df.sample(n=thr, replace=False, random_state=CFG.seed): 对当前类别 c 的数据进行随机抽样（无放回），使其样本数量等于阈值 thr。                    
+8.down_dfs.append(class_df): 将下采样后的当前类别 c 的数据添加到列表 down_dfs 中。        
+
+
+9.down_df = pd.concat([df] + down_dfs, axis=0, ignore_index=True): 将原始数据 df 与下采样后的数据列表 down_dfs 进行合并，并返回合并后的 DataFrame。                          
+
+这个函数的作用是确保每个类别的样本数量不超过指定的阈值 thr，从而缓解数据集中类别不平衡的问题。       
+####################对之前的数据训练####################################                
+#Configurations                               
+numclasses = CFG.numclasses2                     
+df = df_pre.copy()                            
+fold = 0  
+
+1.num_classes = CFG.num_classes2:这一行将类的数量分配给变量num_classes。该值似乎是从名为CFG.num_classes2的配置对象或变量中检索的。                              
+2.df = df_pre.copy():这一行创建了一个名为df_pre的DataFrame的副本，并将其赋值给一个新的变量df。这样做通常是为了防止在执行操作时修改原始DataFrame。                   
+3.fold = 0:这一行将值0赋给变量fold。这个变量可能在以后的交叉验证设置中用于指示特定的折叠，或者将数据集划分为训练集和验证集。 
+
+# Compute batch size and number of samples to drop                            
+infer_bs = (CFG.batch_size*CFG.infer_bs)                         
+drop_remainder = CFG.drop_remainder   
+
+这部分代码似乎是在计算批大小，并确定在创建批时是否删除任何剩余的样本。这些计算有助于确保批次大小适当，以实现有效的训练和推理，并确保在整个过程中一致地处理数据。让我们来分析一下:          
+
+1.infer_bs = (CFG.)batch_size * CFG.infer_bs):这一行通过将batch_size参数乘以infer_bs参数来计算推理批大小。看起来你正在扩展推理的批大小，可能是为了在推理期间适应比训练更大或更小的批大小。                                            
+2.drop_remainder = CFG。drop_remainder:这一行分配CFG的值。到变量Drop_remainder。此参数可能控制是否在数据集批处理期间删除任何不适合完整批处理的剩余样本。如果drop_remainder设置为True，则所有剩余的样本都将被丢弃。如果设置为False，则它们将包含在最后一批中，即使它小于指定的批大小。                                                          
+
+# Split dataset with cv filter                              
+if CFG.cv_filter:                                 
+    df = filter_data(df, thr=5)                               
+    train_df = df.query("fold!=@fold | ~cv").reset_index(drop=True)         
+    valid_df = df.query("fold==@fold & cv").reset_index(drop=True)            
+else:                                    
+    train_df = df.query("fold!=@fold").reset_index(drop=True)                    
+    valid_df = df.query("fold==@fold").reset_index(drop=True)                       
+这部分代码似乎将数据集分成训练集和验证集，可能会使用交叉验证过滤器。让我们来分析一下:
+
+1.如果CFG。cv_filter:此条件检查是否启用了交叉验证过滤器。好像是CFG。Cv_filter是一个配置参数，控制是否应用交叉验证过滤器。                           
+2.df = filter_data(df, thr=5):如果启用了交叉验证过滤器，这一行将使用5的阈值(由thr参数指定)对DataFrame df应用过滤器。filter_data函数可能会基于一些与交叉验证相关的标准来过滤DataFrame。                                                               
+3.Train_df = df.query("fold!=@fold | ~cv").reset_index(drop=True):这一行通过查询df来创建训练DataFrame (train_df)，其中折叠不等于指定的折叠索引(fold!=@fold)或交叉验证列为False (~cv)的行。此操作有效地排除了属于验证折叠或已标记为交叉验证的样本。                  
+4.Valid_df = df。查询(“= = @fold折叠,reset_index(drop=True):类似地，这一行通过查询df来创建验证DataFrame (valid_df)，查找折叠等于指定的折叠索引(fold==@fold)并且交叉验证列为True (cv)的行。此操作选择属于验证折叠并已标记为交叉验证的样本。                        
+5.else::如果没有启用交叉验证过滤器(CFG. CFG. CFG)。cv_filter为False)，则执行此代码块。    
+6.train_df = df.query("fold!=@fold").reset_index(drop=True):在这种情况下，训练DataFrame (train_df)是通过查询df中不等于指定的折叠索引(fold!=@fold)的行来创建的。这将排除属于验证折叠的样本。                                                         
+7.valid_df = df.query("fold==@fold").reset_index(drop=True):验证DataFrame (valid_df)是通过查询df中折线等于指定折线索引(fold==@fold)的行来创建的。这将选择属于验证折叠的样本。     
+
+总的来说，该代码段根据是否启用交叉验证过滤和指定的折叠索引，将数据集划分为训练集和验证集。 
+
+# Upsample train data                                        
+train_df = upsample_data(train_df, thr=50)                          
+train_df = downsample_data(train_df, thr=500)                                 
+
+# Get file paths and labels                                          
+train_paths = train_df.filepath.values; train_labels = train_df.target.values         
+valid_paths = valid_df.filepath.values; valid_labels = valid_df.target.values       
+
+# Shuffle the file paths and labels                                         
+index = np.arange(len(train_paths))                                          
+np.random.shuffle(index)                            
+train_paths  = train_paths[index]                                    
+train_labels = train_labels[index]                                              
+
+1.上采样和下采样:                                               
+2.Upsampling: train_df = upsample_data(train_df, thr=50):这一行似乎是使用一个名为upsample_data的函数对训练数据进行上采样。阈值thr=50表明出现次数少于50次的样本被上采样。   
+3.Downsampling: train_df = downsample_data(train_df, thr=500):这一行使用一个名为 
+ downsample_data的函数对训练数据进行下采样。阈值thr=500表示出现超过500次的样本被下采样。   
+4.文件路径和标签:                                     
+5.Train_paths = train_df.filepath.values;Train_labels = train_df.target。values:从训练数据框(train_df)中提取文件路径和相应的标签。                                   
+6.Valid_paths = valid_df.filepath.values;Valid_labels = valid_df.target。values:类似地，它从验证DataFrame (valid_df)中提取文件路径和标签。                              
+7.洗牌:                                                    
+8.index = np.arange(len(train_paths)):这将创建一个与训练样本数量相对应的索引数组。       
+np.random.shuffle(index):随机打乱索引。                              
+10.train_paths = train_paths[index]和train_labels = train_labels[index]:这两行按照打乱的索引同步打乱文件路径和标签，有效地打乱了训练数据。                            
+总体而言，本节通过上采样和下采样调整类分布对数据进行预处理，并通过洗牌训练数据来保证随机性。                              
+# For debugging                             
+if CFG.debug:                                      
+    min_samples = CFG.batch_size*CFG.replicas*2                             
+    train_paths = train_paths[:min_samples]; train_labels = train_labels[:min_samples]
+    valid_paths = valid_paths[:min_samples]; valid_labels = valid_labels[:min_samples]
+    
+# Ogg or Mp3                                     
+train_ftype = list(map(lambda x: '.ogg' in x, train_paths))        
+valid_ftype = list(map(lambda x: '.ogg' in x, valid_paths))              
+
+# Compute the number of training and validation samples                      
+num_train = len(train_paths); num_valid = len(valid_paths)                  
+
+# Build the training and validation datasets                            
+cache=False                                 
+train_ds = build_dataset(train_paths, train_ftype, train_labels,                
+                         batch_size=CFG.batch_size*CFG.replicas, cache=cache,  shuffle=True,                     
+                        drop_remainder=drop_remainder, num_classes=num_classes) 
+valid_ds = build_dataset(valid_paths, valid_ftype, valid_labels,      
+                         batch_size=CFG.batch_size*CFG.replicas, cache=True,  shuffle=False,                    
+                         augment=False, repeat=False, drop_remainder=drop_remainder,
+                         take_first=True, num_classes=num_classes)           
+这段代码似乎处理了额外的预处理步骤和数据集构造，以及一些调试配置。让我们来分析一下:
+
+1.调试配置:                         
+2.if CFG.debug::此条件检查是否开启了调试模式。                 
+3.min_samples = CFG.batch_size*CFG。replicas*2:它计算调试所需的最小样本数，可能是为了限制数据集大小以实现更快的调试。                             
+4.截断训练和验证数据:                               
+5.训练路径=训练路径[:min_samples];train_labels = train_labels[:min_samples]:这将训练数据截断到指定的最小样本数。                                  
+6.Valid_paths = Valid_paths [:min_samples];valid_labels = valid_labels[:min_samples]:类似地，它将验证数据截断为指定的最小样本数。                           
+7.文件类型识别:                                          
+8.Train_ftype = list(map(lambda x: ';ogg' in x, train_paths)):这一行创建一个布尔列表，指示每个训练文件是否具有.ogg扩展名。           
+9.Valid_ftype = list(map(lambda x: ';ogg' in x, valid_paths)):类似地，它为验证文件创建一个布尔列表。               
+10.计算样本数:                                      
+11.num_train = len(train_paths):计算训练样本的数量。                     
+12.num_valid = len(valid_paths):它计算验证样本的数量。                           
+13.数据结构:                                    
+14.train_ds = build_dataset(…):这一行使用build_dataset函数构造训练数据集。它传递必要的参数，如文件路径、文件类型、标签、批处理大小、缓存选项、shuffle选项和类数量。       
+15.valid_ds = build_dataset(…):类似地，它构造验证数据集。          
+build_dataset函数可能通过加载和预处理数据来准备训练数据集，例如解码音频文件、应用数据增强(如果启用)和批处理数据。                                       
+总的来说，本节设置了用于训练和验证的数据集，并提供了限制数据集大小的可选调试配置。如果您有任何进一步的问题或需要更多的解释，请随时提问! 
+
+# Print information about the fold and training       
+print('#'*25); print('#### Pre-Training')           
+print('#### Image Size: (%i, %i) | Model: %s | Batch Size: %i | Scheduler: %s'%
+      (*CFG.img_size, CFG.model_name, CFG.batch_size*CFG.replicas, CFG.scheduler))   
+print('#### Num Train: {:,} | Num Valid: {:,}'.format(len(train_paths), len(valid_paths)))                    
+
+# Clear the session and build the model                          
+K.clear_session()                                 
+with strategy.scope():                                    
+    model = build_model(CFG, model_name=CFG.model_name, num_classes=num_classes)    
+
+print('#'*25)                                  
+
+# Checkpoint Callback                                  
+ckpt_cb = tf.keras.callbacks.ModelCheckpoint( 
+    'birdclef_pretrained_ckpt.h5', monitor='val_auc', verbose=0, save_best_only=True,
+    save_weights_only=False, mode='max', save_freq='epoch')             
+# LR Scheduler Callback                                
+lr_cb = get_lr_callback(CFG.batch_size*CFG.replicas)             
+callbacks = [ckpt_cb, lr_cb]                                
+这部分代码提供了关于折叠和训练设置的信息，在分布式策略范围内初始化模型，并设置检查点和学习率调度器回调。让我们来分析一下:                      
+
+1.打印培训信息:                               
+2.print('#'*25):打印一系列'#'字符以在视觉上分隔部分。                   
+3.print('#### Pre-Training'):此标题表示预训练部分的开始。                     
+4.打印配置详细信息:                 
+5.图像大小、模型名称、批大小和调度器:这一行打印有关图像大小、模型名称、批大小和用于训练的调度器的信息。                             
+6.Number of Training and Validation Samples:打印训练和验证样本的数量。    
+7.模型初始化:                              
+8.K.clear_session():清除当前Keras会话以释放内存并避免以前模型的混乱。         
+9.使用strategy.scope():…:此代码块在分布式训练策略(strategy)的范围内初始化模型，这允许跨多个加速器(例如，gpu或tpu)进行有效的分布式训练。                            
+10.model = build_model(…):通过使用指定的配置(CFG)和模型名称调用build_model函数来初始化模型。传递num_classes参数以确定用于分类的输出类的数量。              
+11.回调设置:                   
+12.ckpt_cb:这将初始化一个ModelCheckpoint回调，以保存基于验证AUC (val_auc)的最佳模型权重。它指定文件名、监控指标和保存频率。                           
+13.lr_cb:它基于指定的批大小初始化学习率调度器回调。                        
+14.callbacks = [ckpt_cb, lr_cb]:这将创建一个包含检查点和学习率调度器回调的回调列表。   
+总的来说，本节设置了训练环境，包括打印配置细节，在分布式训练范围内初始化模型，以及为模型检查点和学习率调度设置回调。                                
+# Training                          
+history = model.fit(
+    train_ds,                         
+    epochs=2 if CFG.debug else CFG.epochs,                  
+    callbacks=callbacks,                      
+    steps_per_epoch=len(train_paths)/CFG.batch_size//CFG.replicas,       
+    validation_data=valid_ds,                   
+    verbose=CFG.verbose,                          
+)                         
+
+# Show training plot                  
+if CFG.training_plot:                             
+    plot_history(history)                       
+这部分代码执行训练过程，并选择性地显示训练图。让我们来分析一下:
+
+1.模型训练:                          
+2.history = model.fit(…):这一行开始模型的训练。                      
+3.参数:                          
+4.train_ds:训练数据集。                             
+5.epochs:训练的epoch数，如果CFG.debug else CFG.epochs则由2决定。如果启用了调试(CFG.debug为True)，则只使用2个epoch;否则为CFG中指定的epoch数。Epochs是用的。          
+6.回调:训练期间应用的回调列表，包括检查点和学习率调度。                       
+7.step_per_epoch:在声明一个epoch结束之前从数据集产生的步数(批)。它被计算为 
+  len(train_paths)/CFG.batch_size//CFG.replicas。           
+8.validation_data:验证数据集。                         
+9.verbose:冗余模式(0、1或2)，控制训练期间打印的信息量。             
+10.展示训练情节:                         
+11.如果CFG。training_plot:此条件检查是否启用了显示训练图的选项。            
+12.plot_history(history):如果启用，则调用此函数以显示训练历史图，该图通常显示诸如epoch的损失和准确性之类的指标。                                         
+总的来说，本节利用提供的训练和验证数据集，并通过回调监控其进度，编排模型的训练过程。此外，如果需要，它还提供了通过绘图将训练历史可视化的选项。              
