@@ -4,6 +4,12 @@
 * 2024比赛数据作为训练数据
 
 -----------------
+### 问题已解决
+这是2023年pre-training的（公榜0.8分）  
+<img src="https://github.com/XUAN717/BirdCLEF-2024/assets/97745870/57cc075b-b60c-4fee-85db-1b01865238f5" width="600">
+
+这是我的  
+<img src="https://github.com/XUAN717/BirdCLEF-2024/assets/97745870/c29fb46e-cef5-4495-95ed-81e2c9f2bc3a" width="600">
 
 ### pre-training存在错误如下
 
@@ -68,3 +74,6 @@ InvalidArgumentError: Graph execution error:
 
 ### 评论
 评论中也有人更换数据出现了同样的问题
+
+
+
