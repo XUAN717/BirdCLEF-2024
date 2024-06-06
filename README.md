@@ -68,6 +68,18 @@ code explanation.md
 someidea.md  
 compare.md
 
+## 2 EffNet + FSR + CutMixUp  
+### 2.1 预训练  
+加入2020，2021，2022，2023年数据作为预训练，2024年数据训练（0.61）  
+模型保存在https://www.kaggle.com/datasets/wengsilu/birdclef2024training
+
+### 2.2.1 新模型  
+BirdCLEF 2024:Species Identification from Audio（0.65）
+
+### 2.2.2 加入新模型
+加入新模型，分别预测结果，将预测结果取平均提交（0.66，97/917）
+
+
 ## 项目开发流程
 ```mermaid
 gantt
