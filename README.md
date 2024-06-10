@@ -79,6 +79,8 @@ BirdCLEF 2024:Species Identification from Audio（0.65）
 ### 2.2.2 加入新模型
 加入新模型，分别预测结果，将预测结果取平均提交（0.66，97/917）
 
+### 2.3 扩充数据
+https://www.kaggle.com/datasets/wengsilu/allbirdclef2024
 
 ## 项目开发流程
 ```mermaid
