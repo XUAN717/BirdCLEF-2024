@@ -1,0 +1,22 @@
+ targets_tensor = torch.tensor(targets)
+
+    def calculate_f1_at_threshold(y_true, predictions, threshold, average="micro"):
+    # 应用阈值并计算F1分数
+        binary_predictions = (predictions > threshold).int()
+        return f1_score(y_true, binary_predictions.numpy(), average=average)
+
+# 计算不同阈值下的F1分数
+    f1_scores = {
+        "F1_03": calculate_f1_at_threshold(targets_tensor, t, 0.3),
+        "F1_05": calculate_f1_at_threshold(targets_tensor, t, 0.5)
+    }
+
+    # 计算AUC和精确度
+    auc = multiclass_auroc(t, targets_tensor, len(LABELS), "macro")
+    prec = multiclass_precision(t, targets_tensor, len(LABELS), "macro")
+
+     # 计算微观和宏观平均的F1分数
+    f1 = multiclass_f1_score(t, targets_tensor, len(LABELS), "micro")
+    f1_macro = multiclass_f1_score(t, targets_tensor, len(LABELS), "macro")
+
+将auc计算以及f1计算的算法简化，特别注意缩进问题；是个函数里面小的分支。
