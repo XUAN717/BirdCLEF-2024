@@ -82,6 +82,16 @@ BirdCLEF 2024:Species Identification from Audio（0.65）
 ### 2.3 扩充数据
 https://www.kaggle.com/datasets/wengsilu/allbirdclef2024
 
+## 3 结果分析及优化
+### 3.1 排名分析
+<table>
+    <tr>
+        <td ><center><img src="https://github.com/XUAN717/BirdCLEF-2024/assets/97745870/8502fc8d-8897-46bc-9d28-0983f312806b" width="500"></center></td>
+        <td ><center><img src="https://github.com/XUAN717/BirdCLEF-2024/assets/97745870/f237d880-9b1f-492c-82bf-b6dbbe43cfdc" width="500"></center></td>
+    </tr>
+</table>
+
+
 ## 项目开发流程
 ```mermaid
 gantt
@@ -93,10 +103,11 @@ gantt
    
     section 实施
       初次提交      :done, 2024-04-28  , 16d
-      优化算法      :2024-05-14  , 18d
-      测试提交      :2024-04-28  , 43d
+      优化算法      :done, 2024-05-14  , 18d
+      测试提交      :done, 2024-04-28  , 44d
+      结果分析优化  :2024-06-11  , 20d
 
     section 验收
-      验收答辩    :2024-06-10, 10d
+      验收答辩    :2024-07-2, 3d
 ```
 
