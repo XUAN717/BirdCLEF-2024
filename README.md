@@ -72,31 +72,31 @@ Trainmeta分析与可视化
 
 <img src="https://github.com/XUAN717/BirdCLEF-2024/assets/97745870/1f8729ab-c128-4c13-bc5e-55e903f0e9cb" width="500">
 
-## 1 BirdCLEF24: KerasCV Starter
-### 1.1 研究代码
+## 2 BirdCLEF24: KerasCV Starter
+### 2.1 研究代码
 code explanation.md  
 得分0.60，暂以此作为baseline
 
-### 1.2 算法改进
+### 2.2 算法改进
 someidea.md  
 compare.md
 
-## 2 EffNet + FSR + CutMixUp  
-### 2.1 预训练  
+## 3 EffNet + FSR + CutMixUp  
+### 3.1 预训练  
 加入2020，2021，2022，2023年数据作为预训练，2024年数据训练（0.61）  
 模型保存在https://www.kaggle.com/datasets/wengsilu/birdclef2024training
 
-### 2.2.1 新模型  
+### 3.2.1 新模型  
 BirdCLEF 2024:Species Identification from Audio（0.65）
 
-### 2.2.2 加入新模型
+### 3.2.2 加入新模型
 加入新模型，分别预测结果，将预测结果取平均提交（0.66，97/917）
 
-### 2.3 扩充数据
+### 3.3 扩充数据
 https://www.kaggle.com/datasets/wengsilu/allbirdclef2024
 
-## 3 结果分析及优化
-### 3.1 排名分析
+## 4 结果分析及优化
+### 4.1 排名分析
 <table>
     <tr>
         <td ><center><img src="https://github.com/XUAN717/BirdCLEF-2024/assets/97745870/8502fc8d-8897-46bc-9d28-0983f312806b" width="500"></center></td>
