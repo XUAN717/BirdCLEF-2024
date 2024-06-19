@@ -1,7 +1,7 @@
 # BirdCLEF2024 🐦
 ## 任务日志  
 
-* 建立仓库，团队加入
+* 建立仓库，团队加入🎉
 
 * 加入比赛  
   研究比赛规则、任务
@@ -28,21 +28,27 @@
   加入之前几年的input以及对前几年数据进行处理               
 
 * 6.3  
-  effnet+fsr+cutmixup用以往数据做预训练24年数据训练，但存在问题（6.4问题解决）
+  effnet+fsr+cutmixup用以往数据做预训练24年数据训练，但存在问题（🚑️6.4问题解决）
 
-* 6.4🔥  
+* 6.4  
   forkbirdclef，0.65  
   还有段段那个也是0.65  
   （这个只用了24年的数据，可以往里面加以往数据做预训练？但是这样就得拆成两个notebook）
   effnet+fsr+cutmixup+pre-training用以往数据做预训练/2024数据训练
+
+* 6.7  
+  模型集成0.66  
+  0.5+0.5
   
+* 6.9🔥  
+  0.6+0.4⚡️，0.7+0.3，0.8+0.2  
 
 ## 0 一些资料
 ### 0.1  GitHub Desktop
 
-【b站视频】 https://www.bilibili.com/video/BV1o7411U7j6/?share_source=copy_web&vd_source=62d3967069c1f835b2792b2c6bc29ce3
+[【b站视频】]( https://www.bilibili.com/video/BV1o7411U7j6/?share_source=copy_web&vd_source=62d3967069c1f835b2792b2c6bc29ce3)
 
-【使用文档】https://cnxfs.com.cn/download/GithubIntroductionForMembers.docx
+[【使用文档】](https://cnxfs.com.cn/download/GithubIntroductionForMembers.docx)
 
 ### 0.2  小玩意  
 Gitm👽️ji  
@@ -58,6 +64,13 @@ https://www.webfx.com/tools/emoji-cheat-sheet/
 
 预训练音频神经网络  
 PANNs Large-Scale Pretrained Audio Neural Networks for Audio Pattern Recognition
+
+## 1 可视化  
+Trainmeta分析与可视化  
+
+[trainmeta_visualization.md](https://github.com/XUAN717/BirdCLEF-2024/blob/main/visualization/trainmeta_visualization.md)中部分结果  
+
+<img src="https://github.com/XUAN717/BirdCLEF-2024/assets/97745870/1f8729ab-c128-4c13-bc5e-55e903f0e9cb" width="500">
 
 ## 1 BirdCLEF24: KerasCV Starter
 ### 1.1 研究代码
